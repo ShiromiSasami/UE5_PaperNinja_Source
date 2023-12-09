@@ -7,7 +7,7 @@
 #include "C_ScrollBase.generated.h"
 
 /**
- * 
+ * 巻物の基底クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_ScrollBase : public AC_Pickup
@@ -20,7 +20,19 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/// <summary>
+	/// 取得時の処理
+	/// </summary>
+	/// <param name="player">プレイヤーポーン</param>
+	/// <param name="controller">プレイヤーコントローラー</param>
 	virtual void ObtainedImpl(APawn* player, APlayerController* controller) override;
+
+	/// <summary>
+	/// 取得可能状態か判断
+	/// </summary>
+	/// <param name="pawn">プレイヤーポーン</param>
+	/// <param name="playerController">プレイヤーコントローラー<</param>
+	/// <returns>可能かの有無</returns>
 	virtual bool CanBeObtained(APawn* pawn, APlayerController* playerController) override;
 
 private:

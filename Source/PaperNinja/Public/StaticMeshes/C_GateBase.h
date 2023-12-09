@@ -7,6 +7,9 @@
 #include "Components/TimelineComponent.h"
 #include "C_GateBase.generated.h"
 
+/**
+ * ゲートの基底クラス
+ */
 UCLASS()
 class PAPERNINJA_API AC_GateBase : public AActor
 {
@@ -20,11 +23,22 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	/// <summary>
+	/// ゲートの開閉タイムライン処理
+	/// </summary>
+	/// <param name="vec">位置/param>
 	UFUNCTION()
 	void GateTimelineStep(FVector vec);
 
 public:
+	/// <summary>
+	/// ゲートを開く
+	/// </summary>
 	inline void Open() { _gateTimeline->Play(); }
+
+	/// <summary>
+	/// ゲートを閉じる
+	/// </summary>
 	inline void Close() { _gateTimeline->Reverse(); };
 
 protected:

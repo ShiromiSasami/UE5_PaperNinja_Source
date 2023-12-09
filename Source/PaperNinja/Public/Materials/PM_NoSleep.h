@@ -7,7 +7,7 @@
 #include "PM_NoSleep.generated.h"
 
 /**
- * 
+ * NoSleep PysicalMaterial
  */
 UCLASS()
 class PAPERNINJA_API UPM_NoSleep : public UPhysicalMaterial

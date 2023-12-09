@@ -16,6 +16,10 @@ struct FCalcRayStruct
 	FVector End;
 };
 
+/**
+ * BP—pŠÖ”ƒ‰ƒCƒuƒ‰ƒŠ
+ */
+
 UCLASS()
 class PAPERNINJA_API UBP_FuncLibrary : public UBlueprintFunctionLibrary
 {

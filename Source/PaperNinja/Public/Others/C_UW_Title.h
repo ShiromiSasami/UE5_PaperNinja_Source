@@ -25,16 +25,35 @@ public:
 	virtual void NativeConstruct() override;
 
 protected:
+	/// <summary>
+	/// Startボタンが押された時の処理
+	/// </summary>
 	UFUNCTION()
 	void OnClickedStart();
+
+	/// <summary>
+	/// Quitボタンが押された時の処理
+	/// </summary>
 	UFUNCTION()
 	void OnClickedQuit();
 
+	/// <summary>
+	/// 選択中UIの移動処理
+	/// </summary>
+	/// <param name="value">入力値</param>
 	UFUNCTION()
 	void SelectMove(const FInputActionValue& value);
+
+	/// <summary>
+	/// UIの選択処理
+	/// </summary>
+	/// <param name="value">入力値</param>
 	UFUNCTION()
 	void Select(const FInputActionValue& value);
 
+	/// <summary>
+	/// UI状態の更新
+	/// </summary>
 	void UpdateUI();
 
 protected:

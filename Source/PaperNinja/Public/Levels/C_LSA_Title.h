@@ -7,7 +7,7 @@
 #include "C_LSA_Title.generated.h"
 
 /**
- * 
+ * タイトルレベルのレベルスクリプト
  */
 UCLASS()
 class PAPERNINJA_API AC_LSA_Title : public ALevelScriptActor

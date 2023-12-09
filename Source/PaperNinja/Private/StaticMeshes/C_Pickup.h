@@ -22,12 +22,40 @@ public:
 protected:
 	virtual void BeginPlay() override;
 
+	/// <summary>
+	/// コリジョンのオーバーラップイベント
+	/// </summary>
+	/// <param name="OverlappedComponent">コリジョンコンポーネント</param>
+	/// <param name="OtherActor">接触したアクター</param>
+	/// <param name="OtherComp">接触したコンポーネント</param>
+	/// <param name="OtherBodyIndex">接触したコンポーネント</param>
+	/// <param name="bFromSweep">ボーンのインデックス</param>
+	/// <param name="SweepResult">衝突情報</param>
 	UFUNCTION()
 	virtual void ComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
-	virtual void ObtainedImpl(APawn* player, APlayerController* controller){};
+	
+	/// <summary>
+	/// プレイヤーが取得(接触)した時の処理
+	/// </summary>
+	/// <param name="player">プレイヤーポーン</param>
+	/// <param name="controller">プレイヤーコントローラー</param>
+	virtual void ObtainedImpl(APawn* player, APlayerController* controller) = 0;
 
-	virtual bool CanBeObtained(APawn* pawn, APlayerController* playerController);
+	/// <summary>
+	/// 取得(接触)可能か判断
+	/// </summary>
+	/// <param name="pawn">プレイヤーポーン</param>
+	/// <param name="playerController">プレイヤーコントローラー</param>
+	/// <returns></returns>
+	virtual bool CanBeObtained(APawn* pawn, APlayerController* playerController) = 0;
 
+	/// <summary>
+	/// Triggerを任意のコリジョンクラスにキャストして生成する
+	/// コンストラクタでのみ使用可能
+	/// </summary>
+	/// <typeparam name="T"> 任意のコリジョンクラス </typeparam>
+	/// <param name="name"> エディタ上に公開されるTriggerの名前 </param>
+	/// <returns> キャスト後のTrigger </returns>
 	template<typename T>
 	T* CreateTrigger(const FName name);
 
@@ -39,13 +67,7 @@ protected:
 	TObjectPtr<UPrimitiveComponent> _trigger;
 };
 
-/// <summary>
-/// Triggerを任意のコリジョンクラスにキャストして生成する
-/// コンストラクタでのみ使用可能
-/// </summary>
-/// <typeparam name="T"> 任意のコリジョンクラス </typeparam>
-/// <param name="name"> エディタ上に公開されるTriggerの名前 </param>
-/// <returns> キャスト後のTrigger </returns>
+
 template<typename T>
 T* AC_Pickup::CreateTrigger(const FName name)
 {

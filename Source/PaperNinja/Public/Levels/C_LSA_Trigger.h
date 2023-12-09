@@ -7,7 +7,7 @@
 #include "C_LSA_Trigger.generated.h"
 
 /**
- * 
+ *  トリガーレベルのレベルスクリプト
  */
 UCLASS()
 class PAPERNINJA_API AC_LSA_Trigger : public ALevelScriptActor

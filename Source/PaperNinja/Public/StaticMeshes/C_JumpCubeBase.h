@@ -8,6 +8,9 @@
 #include <Components/TimelineComponent.h>
 #include "C_JumpCubeBase.generated.h"
 
+/**
+ * ジャンプキューブの基底クラス
+ */
 UCLASS()
 class PAPERNINJA_API AC_JumpCubeBase : public AActor, public IFloor
 {
@@ -21,19 +24,39 @@ protected:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	/// <summary>
+	/// 移動のブレンド値のタイムライン処理
+	/// </summary>
+	/// <param name="value">ブレンド値</param>
 	UFUNCTION()
 	void JumpCubeLiftTimelineStep(float value);
 
+	/// <summary>
+	/// オンオフの切り替え
+	/// </summary>
+	/// <param name="actor">プレイヤーポーン</param>
 	UFUNCTION()
 	void Toggle(AC_Pawn* actor);
 
 public:
+	/// <summary>
+	/// オフ状態にする
+	/// </summary>
 	inline void LiftReset() {
 		bIsPlayingForward = false;
 		_liftTimeline->Reverse();
 	};
 
+	/// <summary>
+	/// C_Pawn系のアクターが乗った時の処理
+	/// </summary>
+	/// <param name="pawn">ポーン</param>
 	virtual void OnPawnOn_Implementation(AC_Pawn* pawn) override;
+
+	/// <summary>
+	/// C_Pawn系のアクターが降りた時の処理
+	/// </summary>
+	/// <param name="pawn">ポーン/param>
 	virtual void OnPawnOff_Implementation(AC_Pawn* pawn) override;
 
 protected:

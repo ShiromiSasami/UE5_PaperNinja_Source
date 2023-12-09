@@ -7,7 +7,7 @@
 #include "PM_Pushable.generated.h"
 
 /**
- * 
+ * Pushable PysicalMaterial
  */
 UCLASS()
 class PAPERNINJA_API UPM_Pushable : public UPhysicalMaterial

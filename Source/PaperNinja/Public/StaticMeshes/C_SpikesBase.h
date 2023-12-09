@@ -7,7 +7,7 @@
 #include "C_SpikesBase.generated.h"
 
 /**
- * 
+ * ‚Æ‚°‚ÌŠî’êƒNƒ‰ƒX
  */
 UCLASS()
 class PAPERNINJA_API AC_SpikesBase : public AStaticMeshActor

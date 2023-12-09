@@ -7,7 +7,7 @@
 #include "C_GameModeBase.generated.h"
 
 /**
- * 
+ * ゲームモードの基底クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_GameModeBase : public AGameModeBase

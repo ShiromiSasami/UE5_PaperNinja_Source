@@ -7,7 +7,7 @@
 #include "C_PlayerStateBase.generated.h"
 
 /**
- * 
+ * プレイヤーステートの基底クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_PlayerStateBase : public APlayerState
@@ -17,7 +17,16 @@ class PAPERNINJA_API AC_PlayerStateBase : public APlayerState
 public:
 	AC_PlayerStateBase();
 
+	/// <summary>
+	/// 所持コイン枚数の設定
+	/// </summary>
+	/// <param name="num">枚数</param>
 	void SetCoinNum(const int num);
+
+	/// <summary>
+	/// 所持コイン枚数の取得
+	/// </summary>
+	/// <returns>所持数</returns>
 	int GetCoinNum() const;
 
 protected:

@@ -7,7 +7,7 @@
 #include "C_AN_SpawnSoundEmitter.generated.h"
 
 /**
- * 
+ * 足音を出すアニメーション通知
  */
 UCLASS()
 class PAPERNINJA_API UC_AN_SpawnSoundEmitter : public UAnimNotify

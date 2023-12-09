@@ -7,7 +7,7 @@
 #include "C_AN_SpawnFootSmoke.generated.h"
 
 /**
- * 
+ * 足煙を出すアニメーション通知
  */
 UCLASS()
 class PAPERNINJA_API UC_AN_SpawnFootSmoke : public UAnimNotify

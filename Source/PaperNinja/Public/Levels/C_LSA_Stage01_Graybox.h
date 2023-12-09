@@ -33,20 +33,71 @@ private:
 	/// <param name="OtherActor">接触されたアクター</param>
 	UFUNCTION()
 	void OnTriggerOverlapBegin(AActor* OverlappedActor, AActor* OtherActor);
+
+	/// <summary>
+	/// ギア回転補間のブレンド値(アルファ値)のタイムライン処理
+	/// </summary>
+	/// <param name="value">アルファ値</param>
 	UFUNCTION()
 	void GearAlphaTimelineStep(float value);
+
+	/// <summary>
+	/// 北側のスイッチが切り替わった時の処理
+	/// </summary>
+	/// <param name="switchActor">変わったスイッチアクター</param>
 	UFUNCTION()
 	void OnNorthSwitchChanged(AC_SwitchBase* switchActor);
+
+	/// <summary>
+	/// クレーンスイッチが切り替わった時の処理
+	/// </summary>
+	/// <param name="switchActor">変わったスイッチアクター</param>
 	UFUNCTION()
 	void OnCraneSwitchChanged(AC_SwitchBase* switchActor);
+	
+	/// <summary>
+	/// 南側のジャンプキューブの配置リセット処理
+	/// </summary>
+	/// <param name="OverlappedActor">接触したアクター</param>
+	/// <param name="OtherActor">リセットポイント</param>
 	UFUNCTION()
 	void SouthJumpCubeReset(AActor* OverlappedActor, AActor* OtherActor);
+
+	/// <summary>
+	/// 西側のジャンプキューブの配置リセット処理
+	/// </summary>
+	/// <param name="OverlappedActor">接触したアクター</param>
+	/// <param name="OtherActor">リセットポイント</param>
 	UFUNCTION()
 	void WestJumpCubeReset(AActor* OverlappedActor, AActor* OtherActor);
+
+	/// <summary>
+	/// 浮かぶ箱に当たった時の処理
+	/// </summary>
+	/// <param name="SelfActor">浮いている箱</param>
+	/// <param name="OtherActor">接触したアクター</param>
+	/// <param name="NormalImpulse">正規化された衝撃量</param>
+	/// <param name="Hit">衝突情報</param>
 	UFUNCTION()
 	void OnFloatBoxHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+	/// <summary>
+	/// 鉄球に当たった時の処理
+	/// </summary>
+	/// <param name="SelfActor">鉄球</param>
+	/// <param name="OtherActor">接触したアクター</param>
+	/// <param name="NormalImpulse">正規化された衝撃量</param>
+	/// <param name="Hit">衝突情報</param>
 	UFUNCTION()
 	void OnIronSphereHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
+
+	/// <summary>
+	/// 鉄球に当たった時の処理
+	/// </summary>
+	/// <param name="SelfActor">シーソー</param>
+	/// <param name="OtherActor">接触したアクター</param>
+	/// <param name="NormalImpulse">正規化された衝撃量</param>
+	/// <param name="Hit">衝突情報</param>
 	UFUNCTION()
 	void OnSeesawHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit);
 

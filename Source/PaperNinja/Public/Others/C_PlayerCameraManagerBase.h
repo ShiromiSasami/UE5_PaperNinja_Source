@@ -7,7 +7,7 @@
 #include "C_PlayerCameraManagerBase.generated.h"
 
 /**
- * 
+ * プレイヤーカメラマネージャーの基底クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_PlayerCameraManagerBase : public APlayerCameraManager

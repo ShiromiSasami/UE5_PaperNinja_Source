@@ -6,8 +6,8 @@
 #include "GameFramework/GameStateBase.h"
 #include "C_GameStateBase.generated.h"
 
-/**Game内情報の保持クラス
- * 
+/**
+ * GameStateの基礎クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_GameStateBase : public AGameStateBase
@@ -23,20 +23,43 @@ private:
 public:
 #pragma region InlineFunction
 
+	/// <summary>
+	/// _hasScrollsの初期化
+	/// </summary>
+	/// <param name="size">要素数</param>
 	FORCEINLINE void InitScrolls(const uint8 size)
 	{
 		if (size == 0) { return; }
 		_hasScrolls.Init(false, size);
 	};
+
+	/// <summary>
+	/// スクロールを取得したことを記録
+	/// </summary>
+	/// <param name="index">取得したスクロールのインデックス</param>
 	FORCEINLINE void ObtainScroll(const int index)
 	{
 		if (_hasScrolls.Num() <= index) { return; }
 		_hasScrolls[index] = true;
 	};
+
+	/// <summary>
+	/// チェックポイントを設定
+	/// </summary>
+	/// <param name="point">チェックポイント</param>
 	FORCEINLINE void SetCheckpoint(AActor* point) { _checkpoint = point; };
+
+	/// <summary>
+	/// チェックポイントを取得
+	/// </summary>
+	/// <returns>チェックポイント</returns>
 	FORCEINLINE AActor* GetCheckpoint() const { return _checkpoint; };
 #pragma endregion
 
+	/// <summary>
+	/// ステージクリアしたか判断
+	/// </summary>
+	/// <returns>クリアの有無</returns>
 	bool HasCompletedLevel() const;
 
 protected:

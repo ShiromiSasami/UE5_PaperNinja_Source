@@ -7,8 +7,8 @@
 #include "Components/TimelineComponent.h"
 #include "C_TurretBase.generated.h"
 
-/**BPタレットの基礎クラス(BPに派生前提)
- * 
+/**
+ * タレットの基礎クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_TurretBase : public AStaticMeshActor
@@ -23,15 +23,35 @@ private:
 	virtual void BeginPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
+	/// <summary>
+	/// バレルの回転タイムラインの更新
+	/// </summary>
+	/// <param name="value">回転値</param>
 	UFUNCTION()
 	void BarrelTimelineStep(float value);
+
+	/// <summary>
+	/// 銃弾の色変更タイムラインの更新
+	/// </summary>
+	/// <param name="color">色</param>
 	UFUNCTION()
 	void BulletColorTimelineStep(FLinearColor color);
+
+	/// <summary>
+	/// 銃弾発射処理
+	/// </summary>
 	UFUNCTION()
 	void OnBeginFire();
+
+	/// <summary>
+	/// 銃弾発射停止処理
+	/// </summary>
 	UFUNCTION()
 	void OnStopFire();
 
+	/// <summary>
+	/// タイムライン開始処理
+	/// </summary>
 	void StartFire();
 
 protected:

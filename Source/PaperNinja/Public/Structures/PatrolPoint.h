@@ -7,16 +7,22 @@
 #include "PatrolPoint.generated.h"
 
 /**
- * 
+ * パトロール位置情報の構造体
  */
 USTRUCT(BlueprintType)
 struct FPatrolPoint
 {
 	GENERATED_USTRUCT_BODY()
 
+	/// <summary>
+	/// パトロール位置
+	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	ATargetPoint* TargetPoint;
 
+	/// <summary>
+	/// 待機時間
+	/// </summary>
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float WaitTime;
 

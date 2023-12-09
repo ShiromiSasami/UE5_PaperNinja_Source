@@ -7,7 +7,7 @@
 #include "C_PlayerControllerBase.generated.h"
 
 /**
- * 
+ * プレイヤーコントローラーの基底クラス
  */
 UCLASS()
 class PAPERNINJA_API AC_PlayerControllerBase : public APlayerController
@@ -21,9 +21,22 @@ private:
 	virtual void BeginPlay() override;
 	virtual void OnPossess(APawn* aPawn) override;
 
+	/// <summary>
+	/// 入力のセットアップ
+	/// </summary>
 	void SetupInput();
+
+	/// <summary>
+	/// ジャンプアクション処理
+	/// </summary>
+	/// <param name="value">入力値</param>
 	void JumpAction(const struct FInputActionValue& value);
 
+	/// <summary>
+	/// プレイヤーポーンの削除時イベント
+	/// </summary>
+	/// <param name="actor">プレイヤーポーン</param>
+	/// <param name="endPlayReason">削除要因</param>
 	UFUNCTION()
 	void OnPawnEndPlay(AActor* actor, EEndPlayReason::Type endPlayReason);
 
