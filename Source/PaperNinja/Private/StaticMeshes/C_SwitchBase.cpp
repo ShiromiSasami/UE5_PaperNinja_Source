@@ -13,8 +13,8 @@
 AC_SwitchBase::AC_SwitchBase()
 	:bIsOn(false)
 {
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Kitbash/KSM_Switch.KSM_Switch'"));
-	static auto OnMatarialAsset = LoadObject<UMaterialInstanceConstant>(NULL, TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Materials/MI_SwichOn.MI_SwichOn'"));
+	const auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Kitbash/KSM_Switch.KSM_Switch"));
+	const auto OnMatarialAsset = LoadObject<UMaterialInstanceConstant>(NULL, TEXT("/Game/Materials/MI_SwichOn.MI_SwichOn"));
 	if (MeshAsset && OnMatarialAsset)
 	{
 		GetStaticMeshComponent()->SetStaticMesh(MeshAsset);

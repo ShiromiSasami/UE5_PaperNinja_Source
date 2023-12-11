@@ -7,8 +7,7 @@
 
 AC_SpikesBase::AC_SpikesBase()
 {
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Kitbash/KSM_Spikes.KSM_Spikes'"));
-	if (MeshAsset)
+	if (const auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Kitbash/KSM_Spikes.KSM_Spikes")))
 	{
 		GetStaticMeshComponent()->SetStaticMesh(MeshAsset);
 	}

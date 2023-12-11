@@ -18,6 +18,6 @@ public:
 	AC_PlayerCameraManagerBase();
 
 private:
-	const FFloat16 VIEW_PITCH_MIN = -80.f;
-	const FFloat16 VIEW_PITCH_MAX = -20.f;
+	inline static FFloat16 VIEW_PITCH_MIN = -80.f;
+	inline static FFloat16 VIEW_PITCH_MAX = -20.f;
 };

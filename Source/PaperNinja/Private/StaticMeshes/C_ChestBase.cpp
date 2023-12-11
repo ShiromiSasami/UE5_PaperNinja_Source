@@ -13,29 +13,27 @@
 
 
 AC_ChestBase::AC_ChestBase()
+	:_fx(CreateDefaultSubobject<UNiagaraComponent>("FX Component"))
 {
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Megascans/3D_Assets/Small_Wooden_Coffer_ucnhfgviw/S_Small_Wooden_Coffer_ucnhfgviw_lod3.S_Small_Wooden_Coffer_ucnhfgviw_lod3'"));
-	auto* mesh = GetStaticMeshComponent();
-	if (MeshAsset)
+	const auto mesh = GetStaticMeshComponent();
+	const FString MeshPath = TEXT("/Game/Megascans/3D_Assets/Small_Wooden_Coffer_ucnhfgviw/S_Small_Wooden_Coffer_ucnhfgviw_lod3.S_Small_Wooden_Coffer_ucnhfgviw_lod3");
+	if (const auto MeshAsset = LoadObject<UStaticMesh>(NULL, *MeshPath))
 	{
 		mesh->SetStaticMesh(MeshAsset);
 		mesh->SetCanEverAffectNavigation(false);
 	}
 
-	auto trigger = CreateTrigger<UBoxComponent>("BoxCollision");
+	const auto trigger = CreateTrigger<UBoxComponent>("BoxCollision");
 	trigger->SetRelativeLocation(FVector(0.f, 0.f, 20.f));
 	trigger->SetBoxExtent(FVector(25.f, 40.f, 25.f));
 
-	static auto BPCoin = LoadClass<AActor>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/StaticMesh/BP_Coin.BP_Coin_c'"));
-	if (BPCoin)
+	if (const auto BPCoin = LoadClass<AActor>(NULL, TEXT("/Game/Blueprints/StaticMesh/BP_Coin.BP_Coin_c")))
 	{
 		CoinClass = BPCoin;
 	}
 
-	static auto FX = LoadObject<UNiagaraSystem>(NULL, TEXT("/Script/Niagara.NiagaraSystem'/Game/Particles/Niagara/FXS_Chest.FXS_Chest'"));
-	if (FX)
+	if (const auto FX = LoadObject<UNiagaraSystem>(NULL, TEXT("/Game/Particles/Niagara/FXS_Chest.FXS_Chest")))
 	{
-		_fx = CreateDefaultSubobject<UNiagaraComponent>("FX Component");
 		_fx->SetAsset(FX);
 		_fx->SetupAttachment(mesh);
 	}
@@ -47,7 +45,7 @@ void AC_ChestBase::ObtainedImpl(APawn* player, APlayerController* controller)
 	SpawnParams.bDeferConstruction = true;
 	for (int i = 0; i < 10; ++i)
 	{
-		if (auto coin = GetWorld()->SpawnActor<AC_CoinBase>(CoinClass, GetActorTransform(), SpawnParams))
+		if (const auto coin = GetWorld()->SpawnActor<AC_CoinBase>(CoinClass, GetActorTransform(), SpawnParams))
 		{
 			coin->SetSleepThreshold(0.f);
 			coin->EnableTossed();

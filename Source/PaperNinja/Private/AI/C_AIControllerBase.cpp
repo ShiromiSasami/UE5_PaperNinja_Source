@@ -12,8 +12,7 @@ AC_AIControllerBase::AC_AIControllerBase()
 {
     _patrolPoints.Empty();
 
-    UBehaviorTree* PatrolTree = LoadObject<UBehaviorTree>(NULL, TEXT("/Script/AIModule.BehaviorTree'/Game/AI/BT_Patrol.BT_Patrol'"));
-    if (PatrolTree)
+    if (const auto PatrolTree = LoadObject<UBehaviorTree>(NULL, TEXT("/Game/AI/BT_Patrol.BT_Patrol")))
     {
         _patrolTree = PatrolTree;
     }
@@ -57,7 +56,7 @@ void AC_AIControllerBase::OnPossess(APawn* InPawn)
 
 	InPawn->SetCanBeDamaged(false);
 
-    if (auto* pawn = Cast<AC_Pawn>(InPawn))
+    if (auto pawn = Cast<AC_Pawn>(InPawn))
     {
         _patrolPoints = pawn->GetPatrolPoints();
     }

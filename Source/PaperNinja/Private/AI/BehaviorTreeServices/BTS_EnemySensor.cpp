@@ -32,7 +32,7 @@ void UBTS_EnemySensor::TickNode(UBehaviorTreeComponent& OwnerComp, uint8* NodeMe
 	if(!pawn) { return; }
 
 	TArray<AActor*> hitActors = std::get<0>(pawn->GetSensor()->CheckSensor());
-	for(auto* actor : hitActors)
+	for(auto actor : hitActors)
 	{
 		if (C_FuncLibrary::IsPlayerPawn(actor))
 		{

@@ -22,5 +22,5 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	float _speed;
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
-	bool _isSprint;
+	bool bisSprint;
 };

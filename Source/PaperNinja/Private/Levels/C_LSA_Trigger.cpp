@@ -61,17 +61,13 @@ void AC_LSA_Trigger::Tick(float DeltaSeconds)
     {
         for (TActorIterator<AC_JumpCubeBase> ActorItr(GetWorld()); ActorItr; ++ActorItr)
         {
-            auto* jumpCube = Cast<AC_JumpCubeBase>(*ActorItr);
-            if (!jumpCube) { continue; }
-            jumpCube->LiftReset();
+            if (const auto jumpCube = Cast<AC_JumpCubeBase>(*ActorItr)) { jumpCube->LiftReset(); }
         }
     }
 
     if (_enemy)
     {
         _enemy->AddMovementInput(FVector(0.f, 1.f, 0.f));
-
-        auto actor = _enemy->GetCurrentFloor();
     }
 }
 
@@ -87,7 +83,7 @@ void AC_LSA_Trigger::OnTriggerOverlapBegin(AActor* OverlappedActor, AActor* Othe
 
 void AC_LSA_Trigger::OnTrampolineHit(AActor* SelfActor, AActor* OtherActor, FVector NormalImpulse, const FHitResult& Hit)
 {
-    if (auto character = Cast<ACharacter>(OtherActor))
+    if (const auto character = Cast<ACharacter>(OtherActor))
     {
         character->Jump();
     }

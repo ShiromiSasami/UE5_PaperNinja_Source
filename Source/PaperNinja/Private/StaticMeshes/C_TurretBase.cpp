@@ -14,43 +14,39 @@
 
 
 AC_TurretBase::AC_TurretBase()
-	:_fireRate(10),
-	_fireColor(FColor::White)
+	:_barrelMesh(CreateDefaultSubobject<UStaticMeshComponent>("Barrel"))
+	, _rotating(CreateDefaultSubobject<URotatingMovementComponent>("RotatingMovement"))
+	, _fireControlTimeline(new FTimeline())
+	, _fireRate(10)
+	, _fireColor(FColor::White)
 	
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Props/SM_Turret.SM_Turret'"));
-	if (MeshAsset)
+	if (const auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Props/SM_Turret.SM_Turret")))
 	{
 		GetStaticMeshComponent()->SetStaticMesh(MeshAsset);
 	}
 
-	static auto BarrelMeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Props/SM_Turret_Barrel.SM_Turret_Barrel'"));
-	if (BarrelMeshAsset)
+	if (const auto BarrelMeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Props/SM_Turret_Barrel.SM_Turret_Barrel")))
 	{
-		_barrelMesh = CreateDefaultSubobject<UStaticMeshComponent>("Barrel");
 		_barrelMesh->SetStaticMesh(BarrelMeshAsset);
 		_barrelMesh->SetupAttachment(GetStaticMeshComponent(), "BarrelAttachPoint");
 		_barrelMesh->SetMobility(EComponentMobility::Movable);
 	}
 
-	_rotating = CreateDefaultSubobject<URotatingMovementComponent>("RotatingMovement");
 	_rotating->RotationRate = FRotator(0.f, 0.f, 0.f);
 
 	//Timeline設定
-	_fireControlTimeline = new FTimeline();
 	_fireControlTimeline->SetTimelineLength(4.f);
-	static auto BarrelCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Script/Engine.CurveFloat'/Game/Curves/BarrelCurve.BarrelCurve'"));
-	if (BarrelCurve)
+	if (const auto BarrelCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Game/Curves/BarrelCurve.BarrelCurve")))
 	{
 		FOnTimelineFloat BarrelTimelineStepFunc;
 		BarrelTimelineStepFunc.BindUFunction(this, "BarrelTimelineStep");
 		_fireControlTimeline->AddInterpFloat(BarrelCurve, BarrelTimelineStepFunc);
 	}
 
-	static auto BulletColorCurve = LoadObject<UCurveLinearColor>(NULL, TEXT("/Script/Engine.CurveLinearColor'/Game/Curves/BulletColorCurve.BulletColorCurve'"));
-	if (BulletColorCurve)
+	if (const auto BulletColorCurve = LoadObject<UCurveLinearColor>(NULL, TEXT("/Game/Curves/BulletColorCurve.BulletColorCurve")))
 	{
 		FOnTimelineLinearColor BulletColorTimelineStepFunc;
 		BulletColorTimelineStepFunc.BindUFunction(this, "BulletColorTimelineStep");
@@ -64,11 +60,12 @@ AC_TurretBase::AC_TurretBase()
 	StopEndFireEvent.BindUFunction(this, FName("OnStopFire"));
 	_fireControlTimeline->AddEvent(3.f, StopEndFireEvent);
 
-	static auto BPBullet = LoadClass<AC_BulletBase>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/StaticMesh/BP_Bullet.BP_Bullet_c'"));
-	BulletClass = BPBullet;
-
-	static auto BPSensor = LoadClass<USceneComponent>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Components/BP_AC_Sensor.BP_AC_Sensor_c'"));
-	if (BPSensor)
+	if (const auto BPBullet = LoadClass<AC_BulletBase>(NULL, TEXT("/Game/Blueprints/StaticMesh/BP_Bullet.BP_Bullet_c")))
+	{
+		BulletClass = BPBullet;
+	}
+	
+	if (const auto BPSensor = LoadClass<USceneComponent>(NULL, TEXT("/Game/Blueprints/Components/BP_AC_Sensor.BP_AC_Sensor_c")))
 	{
 		_sensor = Cast<UC_AC_SensorBase>(CreateDefaultSubobject("SensorComponent", BPSensor, BPSensor, true, false));
 		_sensor->SetupAttachment(GetStaticMeshComponent(), "Muzzle");
@@ -77,7 +74,12 @@ AC_TurretBase::AC_TurretBase()
 
 AC_TurretBase::~AC_TurretBase()
 {
-	delete _fireControlTimeline;
+	if (_fireControlTimeline)
+	{
+		_fireControlTimeline->Stop();
+		delete _fireControlTimeline;
+		_fireControlTimeline = nullptr;
+	}
 }
 
 void AC_TurretBase::BeginPlay()
@@ -96,9 +98,8 @@ void AC_TurretBase::Tick(float DeltaTime)
 	{
 		_fireControlTimeline->TickTimeline(DeltaTime);
 	}
-	auto checkData = _sensor->CheckSensor();
 	//1番目要素はセンサーヒットの有無
-	if (std::get<1>(checkData))
+	if (std::get<1>(_sensor->CheckSensor()))
 	{
 		StartFire();
 	}
@@ -117,7 +118,7 @@ void AC_TurretBase::BulletColorTimelineStep(FLinearColor color)
 
 void AC_TurretBase::OnBeginFire()
 {
-	float time = C_FuncLibrary::SafeDivide(1.f, (float)_fireRate);
+	const float time = C_FuncLibrary::SafeDivide(1.f, (float)_fireRate);
 	GetWorldTimerManager().SetTimer(
 		_fireTimerHandle,
 		[this] {

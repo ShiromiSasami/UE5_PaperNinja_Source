@@ -10,27 +10,23 @@
 
 AC_GameModeBase::AC_GameModeBase()
 {
-	auto Pawn = LoadClass<APawn>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Character/BP_Ninja.BP_Ninja_c'"));
-	if (Pawn)
+	if (const auto Pawn = LoadClass<APawn>(NULL, TEXT("/Game/Blueprints/Character/BP_Ninja.BP_Ninja_c")))
 	{
 		DefaultPawnClass = Pawn;
 	}
 
-	auto ControllerClass = LoadClass<APlayerController>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Other/BP_PlayerController.BP_PlayerController_c'"));
-	if (ControllerClass)
+	if (const auto ControllerClass = LoadClass<APlayerController>(NULL, TEXT("/Game/Blueprints/Other/BP_PlayerController.BP_PlayerController_c")))
 	{
 		PlayerControllerClass = ControllerClass;
 		ReplaySpectatorPlayerControllerClass = ControllerClass;
 	}
 
-	auto StateClass = LoadClass<APlayerState>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Other/BP_PlayerState.BP_PlayerState_c'"));
-	if (StateClass)
+	if (const auto StateClass = LoadClass<APlayerState>(NULL, TEXT("/Game/Blueprints/Other/BP_PlayerState.BP_PlayerState_c")))
 	{
 		PlayerStateClass = StateClass;
 	}
 
-	auto GameStateBaseClass = LoadClass<AGameStateBase>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Other/BP_GameState.BP_GameState_c'"));
-	if (GameStateBaseClass)
+	if (const auto GameStateBaseClass = LoadClass<AGameStateBase>(NULL, TEXT("/Game/Blueprints/Other/BP_GameState.BP_GameState_c")))
 	{
 		GameStateClass = GameStateBaseClass;
 	}
@@ -38,9 +34,9 @@ AC_GameModeBase::AC_GameModeBase()
 
 AActor* AC_GameModeBase::FindPlayerStart_Implementation(AController* Player, const FString& IncomingName)
 {
-	if (auto* stateBase = Cast<AC_GameStateBase>(UGameplayStatics::GetGameState(GetWorld())))
+	if (const auto stateBase = Cast<AC_GameStateBase>(UGameplayStatics::GetGameState(GetWorld())))
 	{
-		if (auto* checkpoint = stateBase->GetCheckpoint())
+		if (const auto checkpoint = stateBase->GetCheckpoint())
 		{
 			return checkpoint;
 		}

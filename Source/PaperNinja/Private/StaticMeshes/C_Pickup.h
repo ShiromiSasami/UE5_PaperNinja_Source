@@ -39,7 +39,7 @@ protected:
 	/// </summary>
 	/// <param name="player">プレイヤーポーン</param>
 	/// <param name="controller">プレイヤーコントローラー</param>
-	virtual void ObtainedImpl(APawn* player, APlayerController* controller) = 0;
+	virtual void ObtainedImpl(APawn* player, APlayerController* controller) {};
 
 	/// <summary>
 	/// 取得(接触)可能か判断
@@ -47,8 +47,12 @@ protected:
 	/// <param name="pawn">プレイヤーポーン</param>
 	/// <param name="playerController">プレイヤーコントローラー</param>
 	/// <returns></returns>
-	virtual bool CanBeObtained(APawn* pawn, APlayerController* playerController) = 0;
+	virtual bool CanBeObtained(APawn* pawn, APlayerController* playerController);
 
+	/*C++20以降ではコンセプトを利用すべき
+	template<typename T>
+	concept CollisionType = std::is_base_of_v<UPrimitiveComponent, T>;
+	template<CollisionType T>*/
 	/// <summary>
 	/// Triggerを任意のコリジョンクラスにキャストして生成する
 	/// コンストラクタでのみ使用可能

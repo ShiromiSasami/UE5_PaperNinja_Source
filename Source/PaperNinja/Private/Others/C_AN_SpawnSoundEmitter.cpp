@@ -15,10 +15,10 @@ void UC_AN_SpawnSoundEmitter::Notify(USkeletalMeshComponent* MeshComp, UAnimSequ
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
-	if (auto pawn = Cast<ACharacter>( MeshComp->GetOwner()))
+	if (const auto pawn = Cast<ACharacter>( MeshComp->GetOwner()))
 	{
-		auto velocity = pawn->GetVelocity();
-		float speed = FVector2D(velocity.X, velocity.Y).Length();
+		const auto velocity = pawn->GetVelocity();
+		const float speed = FVector2D(velocity.X, velocity.Y).Length();
 		if (speed >= 150.f || pawn->GetCharacterMovement()->IsFalling())
 		{
 			pawn->GetWorld()->SpawnActor<AC_SoundEmitter>(AC_SoundEmitter::StaticClass(), pawn->GetTransform());

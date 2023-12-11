@@ -36,9 +36,9 @@ public:
 	}
 
 private:
-	inline static const FFloat16 VELOCITY_POWER = 600.f;
-	inline static const FFloat16 GRAVITY_SCALE = 0.2f;
-	inline static const FFloat16 BULLET_INITIAL_SPEED = 400.f;
+	inline static const float VELOCITY_POWER = 600.f;
+	inline static const float GRAVITY_SCALE = 0.2f;
+	inline static const float BULLET_INITIAL_SPEED = 400.f;
 
 protected:
 	inline static const float LIFE_SPAN_COUNT = 10.0;

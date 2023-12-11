@@ -14,17 +14,17 @@
 
 
 AC_CoinBase::AC_CoinBase()
-	: _tossVelocity(0.f, 0.f, 400.f),
+	: _rotatingMovement(CreateDefaultSubobject<URotatingMovementComponent>("RotatingMovement")),
+	_tossVelocity(0.f, 0.f, 400.f),
 	_tossed(false),
 	_sleepThreshold(10.f),
 	Gravity(0.f, 0.f, -980.f)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Props/SM_Coin.SM_Coin'"));
-	if (MeshAsset)
+	if (const auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Props/SM_Coin.SM_Coin")))
 	{
-		auto mesh = GetStaticMeshComponent();
+		const auto mesh = GetStaticMeshComponent();
 		mesh->SetStaticMesh(MeshAsset);
 		mesh->SetCanEverAffectNavigation(false);
 		mesh->SetCollisionProfileName("Bullet");
@@ -34,13 +34,10 @@ AC_CoinBase::AC_CoinBase()
 
 	SetMobility(EComponentMobility::Movable);
 
-	_rotatingMovement = CreateDefaultSubobject<URotatingMovementComponent>("RotatingMovement");
-
-	auto* trigger = CreateTrigger<USphereComponent>("SphereCollision");
+	const auto trigger = CreateTrigger<USphereComponent>("SphereCollision");
 	trigger->SetRelativeLocation(FVector(0.f, 0.f, 25.f));
 
-	static auto FX = LoadObject<UNiagaraSystem>(NULL, TEXT("/Script/Niagara.NiagaraSystem'/Game/Particles/Niagara/FXS_Pickup.FXS_Pickup'"));
-	if (FX)
+	if (const auto FX = LoadObject<UNiagaraSystem>(NULL, TEXT("/Game/Particles/Niagara/FXS_Pickup.FXS_Pickup")))
 	{
 		_spawnNiagara = FX;
 	}
@@ -71,10 +68,10 @@ void AC_CoinBase::Tick(float DeltaTime)
 
 	if (_tossed)
 	{
-		auto gravity = Gravity * DeltaTime;
+		const auto gravity = Gravity * DeltaTime;
 		_tossVelocity = _tossVelocity + gravity;
 
-		auto addVec = _tossVelocity * DeltaTime;
+		const auto addVec = _tossVelocity * DeltaTime;
 		FHitResult* result = new FHitResult();
 		AddActorWorldOffset(addVec, true, result);
 		if (result->bBlockingHit)
@@ -91,7 +88,7 @@ void AC_CoinBase::Tick(float DeltaTime)
 
 void AC_CoinBase::ObtainedImpl(APawn* player, APlayerController* controller)
 {
-	if (auto state = Cast<AC_PlayerStateBase>(controller->PlayerState))
+	if (const auto state = Cast<AC_PlayerStateBase>(controller->PlayerState))
 	{
 		state->SetCoinNum(state->GetCoinNum() + 1);
 		UNiagaraFunctionLibrary::SpawnSystemAtLocation(GetWorld(), _spawnNiagara, player->GetActorLocation());

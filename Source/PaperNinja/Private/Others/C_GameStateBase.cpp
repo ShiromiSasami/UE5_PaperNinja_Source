@@ -16,7 +16,7 @@ bool AC_GameStateBase::HasCompletedLevel() const
 {
 	if (_hasScrolls.IsEmpty()) return false;
 
-	for (bool hasScroll : _hasScrolls)
+	for (const bool hasScroll : _hasScrolls)
 	{
 		if (!hasScroll) return false;
 	}

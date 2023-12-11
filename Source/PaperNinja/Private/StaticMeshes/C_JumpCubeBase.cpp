@@ -12,8 +12,10 @@
 #include <EngineUtils.h>
 
 AC_JumpCubeBase::AC_JumpCubeBase()
-	:_destTransform(FVector(0.f, 0.f, 100.f)),
-	bIsPlayingForward(false)
+	:_cube(CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh")))
+	, _liftTimeline(new FTimeline())
+	, _destTransform(FVector(0.f, 0.f, 100.f))
+	, bIsPlayingForward(false)
 	
 {
 	PrimaryActorTick.bCanEverTick = true;
@@ -27,9 +29,8 @@ AC_JumpCubeBase::AC_JumpCubeBase()
 	}
 
 	//StaticMeshComponentÇÃèâä˙âª
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Props/SM_Framed_Box.SM_Framed_Box'"));
-	static auto TriggerMatarialAsset = LoadObject<UMaterialInstanceConstant>(NULL, TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Materials/MI_SwichOn.MI_SwichOn'"));
-	_cube = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("StaticMesh"));
+	const auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Props/SM_Framed_Box.SM_Framed_Box"));
+	const auto TriggerMatarialAsset = LoadObject<UMaterialInstanceConstant>(NULL, TEXT("/Game/Materials/MI_SwichOn.MI_SwichOn"));
 	if (MeshAsset && TriggerMatarialAsset)
 	{
 		_mOff = MeshAsset->GetMaterial(0);
@@ -38,10 +39,8 @@ AC_JumpCubeBase::AC_JumpCubeBase()
 	}
 	_cube->SetupAttachment(GetRootComponent());
 
-	_liftTimeline = new FTimeline();
 	_liftTimeline->SetTimelineLength(1.f);
-	static auto JumpCubeFallCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Script/Engine.CurveFloat'/Game/Curves/JumpCubeLiftAlphaCurve.JumpCubeLiftAlphaCurve'"));
-	if (JumpCubeFallCurve)
+	if (const auto JumpCubeFallCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Game/Curves/JumpCubeLiftAlphaCurve.JumpCubeLiftAlphaCurve")))
 	{
 		FOnTimelineFloat JumpCubeFallTimelineStepFunc;
 		JumpCubeFallTimelineStepFunc.BindUFunction(this, "JumpCubeLiftTimelineStep");
@@ -53,6 +52,7 @@ AC_JumpCubeBase::~AC_JumpCubeBase()
 {
 	if (_liftTimeline)
 	{
+		_liftTimeline->Stop();
 		delete _liftTimeline;
 		_liftTimeline = nullptr;
 	}

@@ -18,10 +18,6 @@ class PAPERNINJA_API AC_LSA_Stage01_Background : public ALevelScriptActor, publi
 public:
 	AC_LSA_Stage01_Background();
 
-private:
-	virtual void BeginPlay() override;
-	virtual void Tick(float DeltaTime) override;
-
 public:
 	/// <summary>
 	/// “ú–vˆ—

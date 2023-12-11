@@ -21,13 +21,6 @@ protected:
 	virtual void BeginPlay() override;
 
 	/// <summary>
-	/// 取得時の処理
-	/// </summary>
-	/// <param name="player">プレイヤーポーン</param>
-	/// <param name="controller">プレイヤーコントローラー</param>
-	virtual void ObtainedImpl(APawn* player, APlayerController* controller) override;
-
-	/// <summary>
 	/// 取得可能状態か判断
 	/// </summary>
 	/// <param name="pawn">プレイヤーポーン</param>

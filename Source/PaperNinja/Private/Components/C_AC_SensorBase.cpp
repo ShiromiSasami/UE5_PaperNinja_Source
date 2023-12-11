@@ -73,7 +73,15 @@ bool UC_AC_SensorBase::DetectSound(TArray<FVector>& locations)
 	TArray<TEnumAsByte<EObjectTypeQuery> > types = { EObjectTypeQuery::ObjectTypeQuery1 };
 	TArray<AActor*> ignoreedActors = { GetOwner() };
 	TArray<AActor*> overlapActors;
-	bool hit = C_FuncLibrary::SphereOverlapByChannel(GetWorld(), overlapActors, GetComponentLocation(), _soundRadius, types, AC_SoundEmitter::StaticClass(), ignoreedActors, _traceDebugParams);
+	bool hit = C_FuncLibrary::SphereOverlapByChannel(
+		GetWorld(), 
+		overlapActors, 
+		GetComponentLocation(), 
+		_soundRadius, 
+		types, 
+		AC_SoundEmitter::StaticClass(), 
+		ignoreedActors, 
+		_traceDebugParams);
 	if (hit)
 	{
 		for (auto actor : overlapActors)

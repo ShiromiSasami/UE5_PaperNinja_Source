@@ -14,8 +14,8 @@ bool UC_UW_Title::Initialize()
 	if(!Super::Initialize()) return false;
 
 
-	_inputMove = LoadObject<UInputAction>(NULL, TEXT("/Script/EnhancedInput.InputAction'/Game/Inputs/IA_Move.IA_Move'"));
-	_inputSelect = LoadObject<UInputAction>(NULL, TEXT("/Script/EnhancedInput.InputAction'/Game/Inputs/IA_Jump.IA_Jump'"));
+	_inputMove = LoadObject<UInputAction>(NULL, TEXT("/Game/Inputs/IA_Move.IA_Move"));
+	_inputSelect = LoadObject<UInputAction>(NULL, TEXT("/Game/Inputs/IA_Jump.IA_Jump"));
 
 	return true;
 }
@@ -36,15 +36,17 @@ void UC_UW_Title::NativeConstruct()
 		_buttonID.Add(EButtonID::Quit);
 	}
 
-	auto eic = Cast<UEnhancedInputComponent>(GetOwningPlayer()->InputComponent);
-	eic->BindAction(_inputMove, ETriggerEvent::Triggered, this, &UC_UW_Title::SelectMove);
-	eic->BindAction(_inputSelect, ETriggerEvent::Triggered, this, &UC_UW_Title::Select);
-	auto imc = LoadObject<UInputMappingContext>(NULL, TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Inputs/IMC_Default.IMC_Default'"), NULL, LOAD_None, NULL);
-
-	if (auto controller = CastChecked<APlayerController>(GetOwningPlayer()))
+	if (const auto eic = Cast<UEnhancedInputComponent>(GetOwningPlayer()->InputComponent))
 	{
-		if (auto subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(controller->GetLocalPlayer()))
+		eic->BindAction(_inputMove, ETriggerEvent::Triggered, this, &UC_UW_Title::SelectMove);
+		eic->BindAction(_inputSelect, ETriggerEvent::Triggered, this, &UC_UW_Title::Select);
+	}
+
+	if (const auto controller = CastChecked<APlayerController>(GetOwningPlayer()))
+	{
+		if (const auto subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(controller->GetLocalPlayer()))
 		{
+			auto imc = LoadObject<UInputMappingContext>(NULL, TEXT("/Game/Inputs/IMC_Default.IMC_Default"));
 			subsystem->AddMappingContext(imc, 0);
 		}
 	}

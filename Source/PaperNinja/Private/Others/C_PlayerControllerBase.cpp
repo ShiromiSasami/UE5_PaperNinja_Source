@@ -24,14 +24,13 @@ AC_PlayerControllerBase::AC_PlayerControllerBase()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	auto CameraManagerClass = LoadClass<APlayerCameraManager>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Other/BP_PlayerCameraManager.BP_PlayerCameraManager_c'"));
-	if (CameraManagerClass)
+	if (const auto CameraManagerClass = LoadClass<APlayerCameraManager>(NULL, TEXT("/Game/Blueprints/Other/BP_PlayerCameraManager.BP_PlayerCameraManager_c")))
 	{
 		PlayerCameraManagerClass = CameraManagerClass;
 	}
 
-	_inputJump = LoadObject<UInputAction>(NULL, TEXT("/Script/EnhancedInput.InputAction'/Game/Inputs/IA_Jump.IA_Jump'"), NULL, LOAD_None, NULL);
-	_imc = LoadObject<UInputMappingContext>(NULL, TEXT("/Script/EnhancedInput.InputMappingContext'/Game/Inputs/IMC_Default.IMC_Default'"), NULL, LOAD_None, NULL);
+	_inputJump = LoadObject<UInputAction>(NULL, TEXT("/Game/Inputs/IA_Jump.IA_Jump"));
+	_imc = LoadObject<UInputMappingContext>(NULL, TEXT("/Game/Inputs/IMC_Default.IMC_Default"));
 }
 
 void AC_PlayerControllerBase::BeginPlay()
@@ -53,23 +52,20 @@ void AC_PlayerControllerBase::SetupInput()
 	EnableInput(this);
 
 	if (!InputComponent) return;
-	if (auto eic = CastChecked<UEnhancedInputComponent>(InputComponent))
+	if (const auto eic = CastChecked<UEnhancedInputComponent>(InputComponent))
 	{
 		eic->BindAction(_inputJump, ETriggerEvent::Triggered, this, &AC_PlayerControllerBase::JumpAction);
 	}
 
-	if (auto controller = CastChecked<APlayerController>(this))
+	if (const auto subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(GetLocalPlayer()))
 	{
-		if (auto subsystem = ULocalPlayer::GetSubsystem<UEnhancedInputLocalPlayerSubsystem>(controller->GetLocalPlayer()))
-		{
-			subsystem->AddMappingContext(_imc, 0);
-		}
+		subsystem->AddMappingContext(_imc, 0);
 	}
 }
 
 void AC_PlayerControllerBase::JumpAction(const FInputActionValue& value)
 {
-	auto* player = GetCharacter();
+	const auto player = GetCharacter();
 	if (player && player->CanJump())
 	{
 		FVector velocity = player->GetVelocity();

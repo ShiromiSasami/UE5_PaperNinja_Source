@@ -16,10 +16,9 @@ AC_BulletBase::AC_BulletBase()
 	PrimaryActorTick.bCanEverTick = true;
 
 	SetMobility(EComponentMobility::Movable);
-	static auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Engine/BasicShapes/Sphere.Sphere'"));
-	if (MeshAsset)
+	if (const auto MeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Engine/BasicShapes/Sphere.Sphere")))
 	{
-		auto mesh = GetStaticMeshComponent();
+		const auto mesh = GetStaticMeshComponent();
 		mesh->SetStaticMesh(MeshAsset);
 		mesh->SetRelativeScale3D(FVector(0.1, 0.1, 0.1));
 		mesh->SetNotifyRigidBodyCollision(true);
@@ -34,7 +33,7 @@ void AC_BulletBase::OnConstruction(const FTransform& Transform)
 {
 	Super::OnConstruction(Transform);
 
-	const auto MaterialAsset = LoadObject<UMaterialInstanceConstant>(NULL, TEXT("/Script/Engine.MaterialInstanceConstant'/Game/Materials/MI_Bullet.MI_Bullet'"));
+	if(const auto MaterialAsset = LoadObject<UMaterialInstanceConstant>(NULL, TEXT("/Game/Materials/MI_Bullet.MI_Bullet")))
 	{
 		_bulletMI = GetStaticMeshComponent()->CreateDynamicMaterialInstance(0, MaterialAsset);
 		_bulletMI->SetVectorParameterValue("EmissiveColor", _bulletColor);
@@ -45,7 +44,7 @@ void AC_BulletBase::BeginPlay()
 {
 	Super::BeginPlay();
 
-	auto* mesh = GetStaticMeshComponent();
+	const auto mesh = GetStaticMeshComponent();
 	mesh->SetSimulatePhysics(true);
 	mesh->SetMassOverrideInKg(NAME_None, 3.f, true);
 	

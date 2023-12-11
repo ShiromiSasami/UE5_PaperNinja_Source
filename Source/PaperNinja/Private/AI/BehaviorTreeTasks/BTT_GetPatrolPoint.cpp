@@ -26,7 +26,7 @@ EBTNodeResult::Type UBTT_GetPatrolPoint::ExecuteTask(UBehaviorTreeComponent& Own
     AAIController* AIController = OwnerComp.GetAIOwner();
     if (!AIController){ return EBTNodeResult::Failed; }
 
-    auto* aiController = Cast<AC_AIControllerBase>(AIController);
+    auto aiController = Cast<AC_AIControllerBase>(AIController);
     if (!aiController) { return EBTNodeResult::Failed; }
 
     UBlackboardComponent* blackboardComp = OwnerComp.GetBlackboardComponent();

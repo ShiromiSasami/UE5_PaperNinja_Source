@@ -21,15 +21,15 @@ void AC_Pickup::BeginPlay()
 
 void AC_Pickup::ComponentBeginOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (auto* pawn = Cast<APawn>(OtherActor))
+	if (const auto pawn = Cast<APawn>(OtherActor))
 	{
-		if (auto* playerController = Cast<APlayerController>(pawn->GetController()))
+		if (const auto playerController = Cast<APlayerController>(pawn->GetController()))
 		{
 			if (CanBeObtained(pawn, playerController))
 			{
 				ObtainedImpl(pawn, playerController);
 				OnObtained.ExecuteIfBound(this);
-				this->Destroy();
+				Destroy();
 			}
 		}
 	}

@@ -16,8 +16,7 @@ AC_Pawn::AC_Pawn()
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	static auto ControllerClass = LoadClass<AController>(NULL, TEXT("/Script/Engine.Blueprint'/Game/AI/BP_AIController.BP_AIController_c'"));
-	if (ControllerClass)
+	if (const auto ControllerClass = LoadClass<AController>(NULL, TEXT("/Game/AI/BP_AIController.BP_AIController_c")))
 	{
 		AIControllerClass = ControllerClass;
 	}
@@ -26,25 +25,22 @@ AC_Pawn::AC_Pawn()
 	GetCharacterMovement()->PushForceFactor = 100000;
 	GetMesh()->SetGenerateOverlapEvents(true);
 
-	static auto BPSensor = LoadClass<UC_AC_SensorBase>(NULL, TEXT("/Script/Engine.Blueprint'/Game/Blueprints/Components/BP_AC_Sensor.BP_AC_Sensor_c'"));
-	if (BPSensor)
+	if (const auto BPSensor = LoadClass<UC_AC_SensorBase>(NULL, TEXT("/Game/Blueprints/Components/BP_AC_Sensor.BP_AC_Sensor_c")))
 	{
 		_sensor = Cast<UC_AC_SensorBase>(CreateDefaultSubobject("SensorComponent", BPSensor, BPSensor, true, false));
 		_sensor->SetupAttachment(GetCapsuleComponent());
 	}
 
-	auto movement = GetCharacterMovement();
+	const auto movement = GetCharacterMovement();
 	movement->MaxAcceleration = MAX_WALK_SPEED;
 	movement->MaxWalkSpeed = MAX_WALK_SPEED;
 
-	static UCurveFloat* AcceleCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Script/Engine.CurveFloat'/Game/Curves/PawnAccelerationCurve.PawnAccelerationCurve'"));
-	if (AcceleCurve)
+	if (const auto AcceleCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Game/Curves/PawnAccelerationCurve.PawnAccelerationCurve")))
 	{
 		_acceleCurve = AcceleCurve;
 	}
 
-	static UCurveFloat* RotRateCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Script/Engine.CurveFloat'/Game/Curves/PawnRotationRateCurve.PawnRotationRateCurve'"));
-	if (RotRateCurve)
+	if (const auto RotRateCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Game/Curves/PawnRotationRateCurve.PawnRotationRateCurve")))
 	{
 		_rotRateCurve = RotRateCurve;
 	}
@@ -55,7 +51,7 @@ void AC_Pawn::OnConstruction(const FTransform& Transform)
 	Super::OnConstruction(Transform);
 
 	if (!_weaponMeshAsset) { return; }
-	auto weaponMesh = NewObject<UStaticMeshComponent>(this);
+	const auto weaponMesh = NewObject<UStaticMeshComponent>(this);
 	_weaponMesh = Cast<UStaticMeshComponent>(weaponMesh);
 	_weaponMesh->SetStaticMesh(_weaponMeshAsset);
 	FAttachmentTransformRules attachRules(EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, EAttachmentRule::SnapToTarget, true);
@@ -74,7 +70,7 @@ void AC_Pawn::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	auto currentFloor = GetCurrentFloor();
+	const auto currentFloor = GetCurrentFloor();
 	if (currentFloor == _lastFloor) { return; }
 
 	//“¥‚Ü‚È‚­‚È‚Á‚½‚±‚Æ‚ð’Ê’m
@@ -92,25 +88,11 @@ void AC_Pawn::Tick(float DeltaTime)
 	}
 	_lastFloor = currentFloor;
 
-	if (_rotRateCurve)
-	{
-		float yawRate = _rotRateCurve->GetFloatValue(GetCharacterMovement()->Velocity.Size());
-		GetCharacterMovement()->RotationRate.Yaw = yawRate;
-	}
+	float yawRate = _rotRateCurve->GetFloatValue(GetCharacterMovement()->Velocity.Size());
+	GetCharacterMovement()->RotationRate.Yaw = yawRate;
 
-	if (_acceleCurve)
-	{
-		float accele = _acceleCurve->GetFloatValue(GetCharacterMovement()->MaxWalkSpeed) ;
-		GetCharacterMovement()->MaxAcceleration = accele;
-	}
-}
-
-// Called to bind functionality to input
-void AC_Pawn::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	
+	float accele = _acceleCurve->GetFloatValue(GetCharacterMovement()->MaxWalkSpeed) ;
+	GetCharacterMovement()->MaxAcceleration = accele;
 }
 
 void AC_Pawn::ComponentHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, FVector NormalImpulse, const FHitResult& Hit)

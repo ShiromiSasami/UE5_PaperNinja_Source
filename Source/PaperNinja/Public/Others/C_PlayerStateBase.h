@@ -21,13 +21,13 @@ public:
 	/// 所持コイン枚数の設定
 	/// </summary>
 	/// <param name="num">枚数</param>
-	void SetCoinNum(const int num);
+	FORCEINLINE void SetCoinNum(const int num) { _numOfCoins = num; };
 
 	/// <summary>
 	/// 所持コイン枚数の取得
 	/// </summary>
 	/// <returns>所持数</returns>
-	int GetCoinNum() const;
+	FORCEINLINE int GetCoinNum() const { return _numOfCoins; };
 
 protected:
 	UPROPERTY(EditAnywhere, meta = (ToolTip = "自機が取ったコインの枚数"))

@@ -7,37 +7,34 @@
 #include "Curves/CurveVector.h"
 
 AC_GateBase::AC_GateBase()
+	: _arrow(CreateDefaultSubobject<UArrowComponent>("Arrow"))
+	, _gateR(CreateDefaultSubobject<UStaticMeshComponent>("SM_Gate_R"))
+	, _gateL(CreateDefaultSubobject<UStaticMeshComponent>("SM_Gate_L"))
+	, _gateTimeline(new FTimeline())
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	_arrow = CreateDefaultSubobject<UArrowComponent>("Arrow");
 	_arrow->ArrowColor = FColor::Cyan;
 	RootComponent = _arrow;
 
 
-	static auto GateRMeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Props/SM_Gate_R.SM_Gate_R'"));
-	if (GateRMeshAsset)
+	if (const auto GateRMeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Props/SM_Gate_R.SM_Gate_R")))
 	{
-		_gateR = CreateDefaultSubobject<UStaticMeshComponent>("SM_Gate_R");
 		_gateR->SetStaticMesh(GateRMeshAsset);
 		_gateR->SetRelativeLocation(FVector(0.f, 25.f, 0.f));
 		_gateR->SetupAttachment(_arrow);
 	}
 
 
-	static auto GateLMeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Script/Engine.StaticMesh'/Game/Props/SM_Gate_L.SM_Gate_L'"));
-	if (GateLMeshAsset)
+	if (const auto GateLMeshAsset = LoadObject<UStaticMesh>(NULL, TEXT("/Game/Props/SM_Gate_L.SM_Gate_L")))
 	{
-		_gateL = CreateDefaultSubobject<UStaticMeshComponent>("SM_Gate_L");
 		_gateL->SetStaticMesh(GateLMeshAsset);
 		_gateL->SetRelativeLocation(FVector(0.f, -25.f, 0.f));
 		_gateL->SetupAttachment(_arrow);
 	}
 
-	_gateTimeline = new FTimeline();
 	_gateTimeline->SetTimelineLength(2.5f);
-	const auto GateMoveCurve = LoadObject<UCurveVector>(NULL, TEXT("/Script/Engine.CurveVector'/Game/Curves/GateMoveCurve.GateMoveCurve'"));
-	if (GateMoveCurve)
+	if (const auto GateMoveCurve = LoadObject<UCurveVector>(NULL, TEXT("/Game/Curves/GateMoveCurve.GateMoveCurve")))
 	{
 		FOnTimelineVector GateTimelineStepFunc;
 		GateTimelineStepFunc.BindUFunction(this, "GateTimelineStep");
@@ -49,6 +46,7 @@ AC_GateBase::~AC_GateBase()
 {
 	if (_gateTimeline)
 	{
+		_gateTimeline->Stop();
 		delete _gateTimeline;
 		_gateTimeline = nullptr;
 	}
@@ -74,15 +72,9 @@ void AC_GateBase::Tick(float DeltaTime)
 
 void AC_GateBase::GateTimelineStep(FVector vec)
 {
-	if (_gateR)
-	{
-		_gateR->SetRelativeLocation(vec);
-	}
+	_gateR->SetRelativeLocation(vec);
 
-	if (_gateL)
-	{
-		auto lVec = vec * FVector(1.f, -1.f, 1.f);
-		_gateL->SetRelativeLocation(lVec);
-	}
+	const auto lVec = vec * FVector(1.f, -1.f, 1.f);
+	_gateL->SetRelativeLocation(lVec);
 }
 

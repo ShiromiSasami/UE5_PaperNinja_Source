@@ -3,8 +3,6 @@
 
 #include "Libraries/BP_FuncLibrary.h"
 
-#include "Libraries/C_FuncLibrary.h"
-
 UBP_FuncLibrary::UBP_FuncLibrary()
 {
 }
@@ -20,12 +18,6 @@ FCalcRayStruct UBP_FuncLibrary::CalcRay(FVector origin, FVector direction, float
 bool UBP_FuncLibrary::IsPlayerPawn(AActor* actor)
 {
 	return C_FuncLibrary::IsPlayerPawn(actor);
-}
-
-template<typename T>
-void UBP_FuncLibrary::ForEachLoopWithDelay(TArray<T> Array, float Duration, UObject* Obj, const FName LoopBodyFuncName, const FName CompletedFuncName)
-{
-	C_FuncLibrary::ForEachLoopWithDelay(Array, Duration, Obj, LoopBodyFuncName, CompletedFuncName);
 }
 
 void UBP_FuncLibrary::Cooldown(bool& IsCooldown, float Duration)

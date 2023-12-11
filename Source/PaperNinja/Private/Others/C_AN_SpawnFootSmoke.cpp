@@ -13,8 +13,7 @@
 UC_AN_SpawnFootSmoke::UC_AN_SpawnFootSmoke()
 {
 	//NiagaraSystemÇÃì«Ç›çûÇ›
-	static auto FX = LoadObject<UNiagaraSystem>(NULL, TEXT("/Script/Niagara.NiagaraSystem'/Game/Particles/Niagara/FXS_FootSmoke.FXS_FootSmoke'"));
-	if (FX)
+	if (const auto FX = LoadObject<UNiagaraSystem>(NULL, TEXT("/Game/Particles/Niagara/FXS_FootSmoke.FXS_FootSmoke")))
 	{
 		_spawnNiagara = FX;
 	}
@@ -24,10 +23,10 @@ void UC_AN_SpawnFootSmoke::Notify(USkeletalMeshComponent* MeshComp, UAnimSequenc
 {
 	Super::Notify(MeshComp, Animation, EventReference);
 
-	if (auto pawn = Cast<ACharacter>(MeshComp->GetOwner()))
+	if (const auto pawn = Cast<ACharacter>(MeshComp->GetOwner()))
 	{
-		auto velocity = pawn->GetVelocity();
-		float speed = FVector2D(velocity.X, velocity.Y).Length();
+		const auto velocity = pawn->GetVelocity();
+		const float speed = FVector2D(velocity.X, velocity.Y).Length();
 		if (speed >= 150.f )
 		{
 			UNiagaraFunctionLibrary::SpawnSystemAtLocation(pawn->GetWorld(), _spawnNiagara, pawn->GetMesh()->GetSocketLocation(_soketName));

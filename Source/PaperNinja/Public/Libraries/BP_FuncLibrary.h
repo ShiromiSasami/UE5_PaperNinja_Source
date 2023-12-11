@@ -2,6 +2,7 @@
 
 #include "CoreMinimal.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "Libraries/C_FuncLibrary.h"
 #include "BP_FuncLibrary.generated.h"
 
 USTRUCT(BlueprintType)
@@ -74,4 +75,9 @@ public:
 	
 };
 
+template<typename T>
+void UBP_FuncLibrary::ForEachLoopWithDelay(TArray<T> Array, float Duration, UObject* Obj, const FName LoopBodyFuncName, const FName CompletedFuncName)
+{
+	C_FuncLibrary::ForEachLoopWithDelay(Array, Duration, Obj, LoopBodyFuncName, CompletedFuncName);
+}
 

@@ -42,18 +42,16 @@ AC_LSA_Stage01_Graybox::AC_LSA_Stage01_Graybox()
     _gearTimeline = new FTimeline();
     _gearTimeline->SetTimelineLength(5.f);
 
-    auto* GearAlphaCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Script/Engine.CurveFloat'/Game/Curves/GearAlphaCurve.GearAlphaCurve'"));
-    if (GearAlphaCurve)
+    if (const auto GearAlphaCurve = LoadObject<UCurveFloat>(NULL, TEXT("/Game/Curves/GearAlphaCurve.GearAlphaCurve")))
     {
         FOnTimelineFloat GearAlphaTimelineStepFunc;
         GearAlphaTimelineStepFunc.BindUFunction(this, "GearAlphaTimelineStep");
         _gearTimeline->AddInterpFloat(GearAlphaCurve, GearAlphaTimelineStepFunc);
     }
 
-    static ConstructorHelpers::FClassFinder<UUserWidget> ClearWidgetClass(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/GameClearWidget.GameClearWidget_c'"));
-    if (ClearWidgetClass.Succeeded())
+    if (const auto ClearWidgetClass = LoadClass<UUserWidget>(NULL, TEXT("/Game/Blueprints/GameClearWidget.GameClearWidget_c")))
     {
-        _clearWidgetClass = ClearWidgetClass.Class;
+        _clearWidgetClass = ClearWidgetClass;
     }
 }
 
@@ -61,6 +59,7 @@ AC_LSA_Stage01_Graybox::~AC_LSA_Stage01_Graybox()
 {
     if (_gearTimeline)
     {
+		_gearTimeline->Stop();
 		delete _gearTimeline;
 		_gearTimeline = nullptr;
 	}
@@ -132,7 +131,7 @@ void AC_LSA_Stage01_Graybox::BeginPlay()
         );
     }
 
-    auto state = Cast<AC_GameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
+    const auto state = Cast<AC_GameStateBase>(UGameplayStatics::GetGameState(GetWorld()));
     if (state)
     {
         state->InitScrolls(_scrolls.Num());
@@ -172,7 +171,7 @@ void AC_LSA_Stage01_Graybox::Tick(float DeltaTime)
         _gearTimeline->TickTimeline(DeltaTime);
     }
 
-    if (auto* gameState = Cast<AC_GameStateBase>(UGameplayStatics::GetGameState(GetWorld())))
+    if (auto gameState = Cast<AC_GameStateBase>(UGameplayStatics::GetGameState(GetWorld())))
     {
         if (gameState->HasCompletedLevel() && !_loadTitleLevel)
         {
@@ -234,8 +233,7 @@ void AC_LSA_Stage01_Graybox::OnNorthSwitchChanged(AC_SwitchBase* switchActor)
     {
         FActorSpawnParameters SpawnParams;
         SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-        auto coin = GetWorld()->SpawnActor<AC_CoinBase>(AC_CoinBase::StaticClass(), point->GetActorTransform(), SpawnParams);
-        if (coin)
+        if (const auto coin = GetWorld()->SpawnActor<AC_CoinBase>(AC_CoinBase::StaticClass(), point->GetActorTransform(), SpawnParams))
         {
             coin->EnableTossed();
             point->Destroy();
@@ -287,7 +285,7 @@ void AC_LSA_Stage01_Graybox::WestJumpCubeReset(AActor* OverlappedActor, AActor* 
     if (!bIsPlayingForward)
     {
         bIsPlayingForward = true;
-        auto bgStriming = UGameplayStatics::GetStreamingLevel(GetWorld(), "Stage01_Background");
+        const auto bgStriming = UGameplayStatics::GetStreamingLevel(GetWorld(), "Stage01_Background");
         if (bgStriming && bgStriming->IsLevelLoaded())
         {
             auto bg = Cast<AC_LSA_Stage01_Background>(bgStriming->GetLoadedLevel()->GetLevelScriptActor());
@@ -308,7 +306,7 @@ void AC_LSA_Stage01_Graybox::OnFloatBoxHit(AActor* SelfActor, AActor* OtherActor
     C_FuncLibrary::Cooldown(bFloatBoxisHitting, 0.25f);
     bFloatBoxisHitting = true;
 
-    auto mesh = _floatBox->GetStaticMeshComponent();
+    const auto mesh = _floatBox->GetStaticMeshComponent();
     mesh->AddImpulse(FVector(0, -150.f, 150.f), NAME_None, true);
     mesh->AddAngularImpulseInDegrees(FVector(360, 0.f, 0.f), NAME_None, true);
 
@@ -318,12 +316,12 @@ void AC_LSA_Stage01_Graybox::OnFloatBoxHit(AActor* SelfActor, AActor* OtherActor
         if (_boxBalloon)
         {
             _boxBalloon->GetStaticMeshComponent()->SetSimulatePhysics(true);
-            if (auto thruster = _boxBalloon->GetComponentByClass(UPhysicsThrusterComponent::StaticClass()))
+            if (const auto thruster = _boxBalloon->GetComponentByClass(UPhysicsThrusterComponent::StaticClass()))
             {
                 thruster->Activate(true);
             }
 
-            if (auto sineCurve = _boxBalloon->GetComponentByClass(UC_AC_SineCurveMovement::StaticClass()))
+            if (const auto sineCurve = _boxBalloon->GetComponentByClass(UC_AC_SineCurveMovement::StaticClass()))
             {
                 sineCurve->SetComponentTickEnabled(false);
             }

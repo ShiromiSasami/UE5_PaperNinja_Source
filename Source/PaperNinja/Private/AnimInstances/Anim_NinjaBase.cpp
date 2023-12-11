@@ -18,7 +18,7 @@ void UAnim_NinjaBase::NativeUpdateAnimation(float DeltaSeconds)
 {
 	Super::NativeUpdateAnimation(DeltaSeconds);
 
-	if (auto pOwner = TryGetPawnOwner())
+	if (const auto pOwner = TryGetPawnOwner())
 	{
 		auto velocity = pOwner->GetVelocity();
 		_speed = FVector2D(velocity.X, velocity.Y).Length();
@@ -26,7 +26,7 @@ void UAnim_NinjaBase::NativeUpdateAnimation(float DeltaSeconds)
 		bIsInAir = pOwner->GetMovementComponent()->IsFalling();
 	}
 
-	if (auto state = Cast<AC_GameStateBase>(GetWorld()->GetGameState()))
+	if (const auto state = Cast<AC_GameStateBase>(GetWorld()->GetGameState()))
 	{
 		bHasCompletedLevel = state->HasCompletedLevel();
 	}

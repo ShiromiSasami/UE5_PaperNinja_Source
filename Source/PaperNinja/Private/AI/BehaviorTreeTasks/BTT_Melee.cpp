@@ -23,7 +23,7 @@ void UBTT_Melee::TickTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory, 
 {
 	Super::TickTask(OwnerComp,  NodeMemory, DeltaSeconds);
 
-	auto* pawn = OwnerComp.GetAIOwner()->GetPawn();
+	auto pawn = OwnerComp.GetAIOwner()->GetPawn();
 	FVector start = pawn->GetActorLocation();
 	FVector dir = pawn->GetActorForwardVector();
 	FVector end = C_FuncLibrary::CalcRay(start, dir, 60.f);

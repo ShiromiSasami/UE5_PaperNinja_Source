@@ -13,8 +13,9 @@ void AC_LSA_Title::BeginPlay()
 {
 	Super::BeginPlay();
 
-    const FString TitleWidgetPath = "/Script/UMGEditor.WidgetBlueprint'/Game/Blueprints/TitleWidget.TitleWidget_c'";
-    const auto TitleWidgetClass = LoadClass<UUserWidget>(NULL, *TitleWidgetPath);
-    UUserWidget* titleWidget = CreateWidget<UUserWidget>(GetWorld(), TitleWidgetClass);
-    titleWidget->AddToViewport();
+    const FString TitleWidgetPath = "/Game/Blueprints/TitleWidget.TitleWidget_c";
+    if (const auto TitleWidgetClass = TSoftClassPtr<UUserWidget>(FSoftClassPath(*TitleWidgetPath)).LoadSynchronous())
+    {
+        CreateWidget<UUserWidget>(GetWorld(), TitleWidgetClass)->AddToViewport();
+    }
 }

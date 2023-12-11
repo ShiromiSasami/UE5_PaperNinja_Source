@@ -14,7 +14,7 @@ UBTT_AICommand::UBTT_AICommand()
 
 EBTNodeResult::Type UBTT_AICommand::ExecuteTask(UBehaviorTreeComponent& OwnerComp, uint8* NodeMemory)
 {
-	auto* pawn = Cast<AC_Pawn>(OwnerComp.GetAIOwner()->GetPawn());
+	auto pawn = Cast<AC_Pawn>(OwnerComp.GetAIOwner()->GetPawn());
 	if (!pawn) { return EBTNodeResult::Failed; }
 
 	bool success = false;
@@ -36,10 +36,10 @@ EBTNodeResult::Type UBTT_AICommand::ExecuteTask(UBehaviorTreeComponent& OwnerCom
 
 FString UBTT_AICommand::GetStaticDescription() const
 {
-	const UEnum* Enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("E_AICommand"), true);
+	const auto Enum = FindObject<UEnum>(ANY_PACKAGE, TEXT("E_AICommand"), true);
 	if (!Enum)
 	{
-		return std::move(FString("Invalid"));
+		return FString("Invalid");
 	}
 	FString CommandName = Enum->GetNameByValue(static_cast<uint8>(_command)).ToString();
 	return CommandName;

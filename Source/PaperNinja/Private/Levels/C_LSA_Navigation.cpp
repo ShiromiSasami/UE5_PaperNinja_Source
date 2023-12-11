@@ -18,30 +18,30 @@ AC_LSA_Navigation::AC_LSA_Navigation()
 
 void AC_LSA_Navigation::BeginPlay()
 {
-    if (_enemy)
+    /*if (_enemy)
     {
         AAIController* aiController = Cast<AAIController>(_enemy->GetController());
         if (aiController && _patrolPoints[0].TargetPoint)
         {
-            //FAIRequestID requestID = aiController->MoveToLocation(_patrolPoints[0].TargetPoint->GetActorLocation());
-            /*if (requestID.IsValid())
+            FAIRequestID requestID = aiController->MoveToLocation(_patrolPoints[0].TargetPoint->GetActorLocation());
+            if (requestID.IsValid())
             {
                 aiController->ReceiveMoveCompleted.AddDynamic(this, &AC_LSA_Navigation::MoveCompleted);
-            }*/
+            }
         }
-    }
+    }*/
 }
 
 void AC_LSA_Navigation::MoveCompleted(FAIRequestID RequestID, EPathFollowingResult::Type Result)
 {
-    if (Result == EPathFollowingResult::Type::Success)
+    /*if (Result == EPathFollowingResult::Type::Success)
     {
         if (_patrolPoints.IsEmpty()) { return; }
         FPatrolPoint point = _patrolPoints[0];
         _patrolPoints.RemoveAt(0);
         _patrolPoints.Add(point);
 
-        /*if (_enemy)
+        if (_enemy)
         {
             FTimerHandle handle;
             GetWorldTimerManager().SetTimer(
@@ -56,6 +56,6 @@ void AC_LSA_Navigation::MoveCompleted(FAIRequestID RequestID, EPathFollowingResu
                 _patrolPoints[0].WaitTime, 
                 false
             );
-        }*/
-    }
+        }
+    }*/
 }
